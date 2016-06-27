@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>内容验证</title>
+
+
+<style>
+*{font-size:12px; font-family:宋体,Arial; font-weight:normal;  color:#333;}
+.red{color:red; font-weight:bold;}
+</style>
+
+
+<script>
+	var REG_VALIDATE=new Array();
+	REG_VALIDATE["chn"]=/^[\u0391-\uFFE5]+$/;
+	REG_VALIDATE["age"]=/^\d{1,3}$/;
+	//第一个问号前（028）或者028-匹配0或者一次  第二个问号前（028）或者028匹配0或一次  最后是匹配电话号码1-9匹配最少6次  最多7次
+	REG_VALIDATE["tel"]=/^((\(0?\d{2,3}\))|(0?\d{2,3}\-))?(\(0\d{2,3}\)|0\d{2,3}-)?[1-9]\d{6,7}]$/; //
+	//\w匹配一个字符.数字.下划线
+	REG_VALIDATE["email"]=/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+	REG_VALIDATE["required"]=/.+/;
+	
+	function chkform(formObj){
+			var eles,err,strValue,strType,obj,objFirstInput;
+			eles=formObj.elements;
+			err=0;
+			for(var i=0;i<eles.length;i++){
+					strValue=eles[i].value;
+					strType=String(eles[i].verify).toLowerCase();
+					switch(strType){
+							case "chn":
+							case "age":
+							case "tel":
+							case "email":
+							case "required":
+								if(REG_VALIDATE[strType].test(strValue)){
+									displayErrMsg(eles[i],"&nbsp;")
+									}else{
+										if(!objFirstInput)objFirstInput=eles[i];
+										err++;displayErrMsg(eles[i],eles[i].msg);
+								}
+							break;
+							case "repass":
+								obj=document.getElementById(eles[i].id.replace(/^re\_/i,""));
+								if(!obj) continue;
+								if(obj.value !=strValue){
+									if(!objFirstInput)objFirstInput=eles[i];
+										err++;displayErrMsg(eles[i],eles[i].msg);
+									}else{
+									displayErrMsg(eles[i],"&nbsp;")
+								}
+							break;
+						}
+				
+			
+		
+			      if(err>0){
+				      objFirstInput.focus();
+				      return(false);
+				      }else{
+					  alter("可以提交，请等待");
+					  return (true);
+					
+					 }
+		
+		}
+		
+		
+		}
+		
+	function displayErrMsg(ipt,strMsg){
+			var obj;
+			obj=ipt.parentNode.nextSibling;
+			obj.innerHtml=strMsg;
+		
+		
+		}
+
+</script>
+
+</head>
+
+<body style="overflow:auto; center" >
+	<center>
+	注册测试页面：<br/>
+    <form onsubmit="return chkform(this);">
+    <table>
+    	
+    	<tr>
+        	<td>姓名</td>
+        	<td><input name="txtName" verify="chn" msg="姓名必须是中文"></td>
+            <td class="red"></td>
+		</tr>	
+        
+        <tr>
+        	<td>年龄</td>
+        	<td><input name="txtAge" verify="age" msg="年龄必须是三位以内的数字"></td>
+            <td class="red"></td>
+		</tr>
+        	
+        <tr>
+        	<td>密码</td>
+        	<td><input name="txtPass" id="txtPass"  verify="required" type="password" msg="密码必须填写"></td>
+            <td class="red"></td>
+		</tr>	
+        
+        <tr>
+        	<td>确认密码</td>
+        	<td><input name="RetxtPass" id="re_txtPass" type="password" verify="repass" msg="确认密码不符合"></td>
+            <td class="red"></td>
+		</tr>	
+        
+        <tr>
+        	<td>电话号码</td>
+        	<td><input name="txtTel" verify="tel" msg="电话号码不正确"></td>
+            <td class="red"></td>
+		</tr>
+        
+        <tr>
+        	<td>E-mail</td>.......
+        	<td><input name="txtEmail" verify="email" msg="E-mail地址不合法"></td>
+            <td class="red"></td>
+		</tr>	
+        
+        <tr>
+        	<td colspan=3 align="center">
+            	<input type="submit" value="提交" />
+                <input type="reset"  value="重填" />            	
+            </td>
+		</tr>
+
+		
+	</table>
+	</form>
+    </center>
+</body>
+</html>

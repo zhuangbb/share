@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>商品加减运算</title>
+<style>
+	li{ margin-bottom:10px;}
+</style>
+<script>
+
+</script>
+</head>
+
+<body>
+<form id="price">
+
+
+<ul id="list">
+	<li>
+    	<input type="button" value="-" />
+        <strong>0</strong>
+        <input type="button" value="+" />
+        单价：<em>12.5元</em>
+        小计：<span>0元</span>
+    </li>
+	<li>
+    	<input type="button" value="-" />
+        <strong>0</strong>
+        <input type="button" value="+" />
+        单价：<em>24.5元</em>
+        小计：<span>0元</span>
+    </li>
+	<li>
+    	<input type="button" value="-" />
+        <strong>0</strong>
+        <input type="button" value="+" />
+        单价：<em>10.5元</em>
+        小计：<span>0元</span>
+    </li>
+	<li>
+    	<input type="button" value="-" />
+        <strong>0</strong>
+        <input type="button" value="+" />
+        单价：<em>15.5元</em>
+        小计：<span>0元</span>
+    </li>
+	<li>
+    	<input type="button" value="-" />
+        <strong>0</strong>
+        <input type="button" value="+" />
+        单价：<em>2222元</em>
+        小计：<span>0元</span>
+    </li>
+</ul>
+</form>
+<p id="p">商品合计共：<span>0</span>件，共花费了：<span>0元</span>,其中最贵的商品单价是：<span>0元</span></p>
+</body>
+<script>
+    function g(x){
+        return document.getElementById(x);
+    }
+    var form=g('price')
+    for(var i= 0,button=g('list').getElementsByTagName('input');i<button.length;i++){
+        button[i].value=='+' && (button[i].onclick=function(){
+            this.parentNode.num=this.parentNode.num || 0
+            this.parentNode.num++
+            this.parentNode.single=this.parentNode.single || parseFloat(this.parentNode.getElementsByTagName('em')[0].innerText)
+            renderSelf(this.parentNode)
+            renderP()
+        })
+        button[i].value=='-' && (button[i].onclick=function(){
+            this.parentNode.num=this.parentNode.num || 0
+            this.parentNode.num--
+            this.parentNode.num=this.parentNode.num<0?0:this.parentNode.num
+            this.parentNode.single=this.parentNode.single || parseFloat(this.parentNode.getElementsByTagName('em')[0].innerText)
+            renderSelf(this.parentNode)
+            renderP()
+        })
+    }
+    function renderSelf(par){
+        par.getElementsByTagName('strong')[0].innerText=par.num
+        par.all=par.num*par.single
+        par.getElementsByTagName('span')[0].innerText=par.all+'元'
+        var most=0
+        par.parentNode.most=(function(){
+
+            for(var i= 0,li=g('list').getElementsByTagName('li');i<li.length;i++){
+                li[i].single && li[i].num && li[i].single>most && (most=li[i].single)
+            }
+
+            return most
+        })()
+    }
+
+    function renderP(){
+        var sum=0
+        var all=0
+        for(var i= 0,li=g('list').getElementsByTagName('li');i<li.length;i++){
+            sum+=(li[i].num || 0)*1
+            all+=li[i].all || 0
+        }
+        g('p').getElementsByTagName('span')[0].innerText=sum
+        g('p').getElementsByTagName('span')[1].innerText=all+"元"
+        g('p').getElementsByTagName('span')[2].innerText=document.getElementById('list').most+'元'
+        return sum
+    }
+</script>
+
+</html>
